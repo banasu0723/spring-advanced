@@ -27,9 +27,21 @@ public class TodoService {
 
     @Transactional
     public TodoSaveResponse saveTodo(AuthUser authUser, TodoSaveRequest todoSaveRequest) {
+
+        //비즈니스 로직 처리 1
+        // ~~~
+        //
+
+
         User user = User.fromAuthUser(authUser);
 
         String weather = weatherClient.getTodayWeather();
+
+
+        //비즈니스 로직 처리 2
+        //
+        // weather ~~~
+        //
 
         Todo newTodo = new Todo(
                 todoSaveRequest.getTitle(),
@@ -39,6 +51,12 @@ public class TodoService {
         );
         Todo savedTodo = todoRepository.save(newTodo);
 
+        //비즈니스 로직 처리 3
+        //
+        // ~~ savedTodo
+        //
+
+        // :: 반환값
         return new TodoSaveResponse(
                 savedTodo.getId(),
                 savedTodo.getTitle(),

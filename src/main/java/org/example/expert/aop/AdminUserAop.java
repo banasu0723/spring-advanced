@@ -4,6 +4,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -18,17 +20,15 @@ import java.time.LocalDateTime;
 @Component
 @RequiredArgsConstructor
 public class AdminUserAop {
-    @Pointcut("within(org.example.expert.domain.comment.controller.CommentAdminController) || " +
-            "within(org.example.expert.domain.user.controller.UserAdminController)")
-    public void adminUserControllerMethods() {
-    }
+    @Pointcut("execution(* org.example.expert.aop..*(..))")
+    private void serviceLayer(){}
 
-    @Before("adminUserControllerMethods()")
-    public void logAdminAccess(JoinPoint joinPoint) {
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        Long userId = (Long) request.getAttribute("userId");
-        String url = request.getRequestURI();
-        LocalDateTime time = LocalDateTime.now();
-        log.info("요청한 사용자의 ID: {}, API 요청 URL: {}, API 요청 시각: {}", userId, url, time);
+    @Around("serviceLayer()")
+    public Object advicePackage(ProceedingJoinPoint joinPoint) throws Throwable {
+        try{
+            return joinPoint.proceed();
+        } finally {
+
+        }
     }
 }
